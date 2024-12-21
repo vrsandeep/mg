@@ -7,7 +7,22 @@ on:
     types: ['opened', 'reopened', 'synchronize', 'ready_for_review']
 
 jobs:
-  build:
+  build-apk:
+    runs-on: ubuntu-latest
+    container:
+      image: crystallang/crystal:1.0.0-alpine
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install system dependencies
+      run: apk add --no-cache sqlite-dev rsync
+    - name: Install shards
+      run: shards install
+    - name: Test
+      run: crystal spec
+    - name: Ameba
+      run: ./bin/ameba
+
+  build-on-ubuntu:
     strategy:
       fail-fast: false
       matrix:
