@@ -43,11 +43,11 @@ module MG
           ver = __FILE__.match(/^.+\.([0-9]+)\.cr$/).not_nil![1].to_i
         rescue
           raise MG::FilenameError.new "The filename #{__FILE__} does not " \
-              "contain a valid version number"
+                                      "contain a valid version number"
         end
         unless ver > 0
           raise MG::FilenameError.new "Version number must be non-negative, " \
-            "but we found #{ver} in #{__FILE__}"
+                                      "but we found #{ver} in #{__FILE__}"
         end
         ver
       end
