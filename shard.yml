@@ -1,10 +1,11 @@
 name: mg
-version: 0.5.0
+version: 0.6.0
 
 authors:
   - Alex Ling <email@hkalexling.com>
+  - Sandeep Rao
 
-crystal: 1.0.0
+crystal: ">= 1.0.0, < 2.0.0"
 
 license: MIT
 

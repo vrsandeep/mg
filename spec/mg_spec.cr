@@ -152,7 +152,7 @@ describe MG do
         after_down_time = Time.unix_ms(lc[:after_down])
 
         # Count no more than: down + down + after_down
-        count.should eq (prev_count + 3)
+        count.should eq(prev_count + 3)
 
         # Test the execution order
         # We have only the first migration with a lifecyle

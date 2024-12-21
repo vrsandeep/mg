@@ -1,0 +1,5 @@
+Lint/SpecFilename:
+  Excluded:
+    - spec/migration/*
+Naming/BlockParameterName:
+  Enabled: false

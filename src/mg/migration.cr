@@ -42,11 +42,13 @@ module MG
     end
 
     private def next_version(ver : Int32)
-      versions.find &.version.> ver
+      next_version = versions.find &.version.> ver
+      next_version || raise(VersionError.new "No next version found")
     end
 
     private def prev_version(ver : Int32)
-      versions.reverse.find &.version.< ver
+      prev_version = versions.reverse.find &.version.< ver
+      prev_version || raise(VersionError.new "No previous version found")
     end
 
     # :nodoc:
@@ -95,7 +97,7 @@ module MG
 
     # Returns true if the connection uses SQLite driver, false otherwise.
     private def sqlite? : Bool
-      @db.driver.class.to_s == "SQLite3::Driver"
+      @db.checkout.class.to_s == "SQLite3::Connection"
     end
 
     private def check_version(to : Int32)
@@ -117,9 +119,9 @@ module MG
         end
 
         target = if is_up
-                   next_version(user_version).not_nil!
+                   next_version(user_version)
                  else
-                   prev_version(user_version).not_nil!
+                   prev_version(user_version)
                  end
 
         log.info { "Migrating to #{target.name} (#{target.version})" }

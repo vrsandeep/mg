@@ -4,11 +4,11 @@ on:
   push:
     branches: [ master ]
   pull_request:
-    branches: [ master ]
+    types: ['opened', 'reopened', 'synchronize', 'ready_for_review']
 
 jobs:
-  build:
-    runs-on: ubuntu-18.04
+  build-apk:
+    runs-on: ubuntu-latest
     container:
       image: crystallang/crystal:1.0.0-alpine
     steps:
@@ -21,3 +21,35 @@ jobs:
       run: crystal spec
     - name: Ameba
       run: ./bin/ameba
+
+  build-on-ubuntu:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        crystal: [1.0.0, latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Install Crystal
+        uses: crystal-lang/install-crystal@v1
+        with:
+          crystal: ${{ matrix.crystal }}
+
+      - name: Download source
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: sudo apt-get install -y libsqlite3-dev rsync
+
+      - name: Install shards
+        run: shards install
+
+      - name: Test
+        run: crystal spec
+
+      - name: Check formatting
+        run: crystal tool format; git diff --exit-code
+        if: matrix.crystal == 'latest' && matrix.os == 'ubuntu-latest'
+
+      - name: Ameba
+        run: ./bin/ameba
